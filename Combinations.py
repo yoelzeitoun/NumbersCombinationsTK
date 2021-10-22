@@ -16,7 +16,7 @@ class Combinations(Frame):
     def __init__(self, master, **kw):
         super().__init__(master, **kw)
 
-        master.geometry("800x600")
+        master.geometry("900x600")
 
         # main frame
         self.main_frame = ttk.Frame(master)
