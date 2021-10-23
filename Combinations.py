@@ -16,7 +16,7 @@ class Combinations(Frame):
     def __init__(self, master, **kw):
         super().__init__(master, **kw)
 
-        master.geometry("900x600")
+        master.geometry("1100x700")
 
         # main frame
         self.main_frame = ttk.Frame(master)
@@ -25,6 +25,7 @@ class Combinations(Frame):
         # list of entries
         self.list_frame_entries = []
         self.list_boxes = []
+        self.set_of_list = set()
 
         # set entries numbers
         self.big_frame = Frame(self.main_frame)
@@ -37,7 +38,7 @@ class Combinations(Frame):
         self.high_frame.pack(fill=BOTH, expand=1, padx=5, pady=50)
 
         self.number_entries = Entry(self.number_frame, justify=CENTER)
-        create_label_entry(self.number_frame, self.number_entries, "כמות מספרים", "0")
+        create_label_entry(self.number_frame, self.number_entries, "כמות מספרים", "2")
 
         set_button = Button(self.number_frame, text="הצג", command=lambda: self.__set_buttons(),
                             height=1, width=20)
@@ -52,13 +53,13 @@ class Combinations(Frame):
         self.text_frame = Frame(self.main_frame)
         self.text_frame.pack(fill=BOTH, expand=1, padx=5, pady=5)
 
-        text_area = scrolledtext.ScrolledText(self.text_frame,
-                                              wrap=WORD,
-                                              width=40,
-                                              height=50,
-                                              font=("Times New Roman", 15))
+        self.text_area = scrolledtext.ScrolledText(self.text_frame,
+                                                   wrap=WORD,
+                                                   width=40,
+                                                   height=50,
+                                                   font=("Times New Roman", 25))
 
-        text_area.pack()
+        self.text_area.pack()
 
     def __set_buttons(self):
         # clean frames
@@ -75,9 +76,23 @@ class Combinations(Frame):
             min_entry = Entry(new_frame, justify=CENTER)
             create_label_entry(new_frame, min_entry, "מינימום", "1")
             max_entry = Entry(new_frame, justify=CENTER)
-            create_label_entry(new_frame, max_entry, "מקסימום", "20")
+            create_label_entry(new_frame, max_entry, "מקסימום", "3")
 
             self.list_boxes.append(Box(min_entry, max_entry))
 
     def __calculate(self):
-        print("calculate")
+        copy_list_boxes = self.list_boxes.copy()
+        self.set_of_list = copy_list_boxes.pop().get_set_of_values()
+        temp_set = self.set_of_list.copy()
+        for j in range(int(self.number_entries.get()) - 1):
+            new_list = copy_list_boxes.pop()
+            for current_set in self.set_of_list:
+                for i in new_list.get_set_of_values():
+                    temp_set.add(current_set.union(i))
+                temp_set.remove(current_set)
+            self.set_of_list = temp_set.copy()
+        self.text_area.delete('1.0', END)
+        self.text_area.insert('1.0', 'RESULTS\n')
+        final_list = [list(x) for x in self.set_of_list]
+        for x in final_list:
+            self.text_area.insert(END, f'{x}\n')
