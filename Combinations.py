@@ -55,9 +55,9 @@ class Combinations(Frame):
 
         self.text_area = scrolledtext.ScrolledText(self.text_frame,
                                                    wrap=WORD,
-                                                   width=40,
+                                                   width=50,
                                                    height=50,
-                                                   font=("Times New Roman", 25))
+                                                   font=("Times New Roman", 20))
 
         self.text_area.pack()
 
@@ -92,7 +92,8 @@ class Combinations(Frame):
                 temp_set.remove(current_set)
             self.set_of_list = temp_set.copy()
         self.text_area.delete('1.0', END)
-        self.text_area.insert('1.0', 'RESULTS\n')
+
         final_list = [list(x) for x in self.set_of_list]
+        self.text_area.insert('1.0', f'{len(final_list)} RESULTS:\n\n')
         for x in final_list:
             self.text_area.insert(END, f'{x}\n')
